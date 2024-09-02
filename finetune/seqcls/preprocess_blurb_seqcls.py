@@ -23,11 +23,15 @@ def process_pubmedqa(fname):
     dname = "pubmedqa"
     print (dname, fname)
     if fname in ["train", "dev"]:
-        data = json.load(open(f"raw_data/blurb/data_generation/data/pubmedqa/pqal_fold0/{fname}_set.json"))
+        file_path = f"raw_data/blurb/data_generation/data/pubmedqa/pqal_fold0/{fname}_set.json"
     elif fname == "test":
-        data = json.load(open(f"raw_data/blurb/data_generation/data/pubmedqa/{fname}_set.json"))
+        file_path = f"raw_data/blurb/data_generation/data/pubmedqa/{fname}_set.json"
     else:
         assert False
+    
+    with open(file_path, "r") as f:
+        data = json.load(f)
+        
     outs, lens = [], []
     for id in data:
         obj = data[id]
@@ -50,7 +54,8 @@ process_pubmedqa("dev")
 def process_bioasq(fname):
     dname = "bioasq"
     print (dname, fname)
-    df = pd.read_csv(open(f"raw_data/blurb/data_generation/data/BioASQ/{fname}.tsv"), sep="\t", header=None)
+    with open(f"raw_data/blurb/data_generation/data/BioASQ/{fname}.tsv", "r") as f:
+        df = pd.read_csv(f, sep="\t", header=None)
     outs, lens = [], []
     for _, row in df.iterrows():
         id       = row[0].strip()
@@ -68,3 +73,4 @@ def process_bioasq(fname):
 process_bioasq("test")
 process_bioasq("dev")
 process_bioasq("train")
+
